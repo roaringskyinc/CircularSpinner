@@ -21,7 +21,7 @@ import UIKit
 open class CircularSpinner: UIView {
     
     // MARK: - singleton
-    static public let sharedInstance = CircularSpinner(frame: CGRect.zero)
+    static public var sharedInstance = CircularSpinner(frame: CGRect.zero)
     
     
     // MARK: - outlets
@@ -333,11 +333,19 @@ open class CircularSpinner: UIView {
 // MARK: - API
 extension CircularSpinner {
     
-    open class func show(_ title: String = "", animated: Bool = true, type: CircularSpinnerType = .determinate, showDismissButton: Any? = nil, delegate: CircularSpinnerDelegate? = nil) {
+    open class func show(_ title: String = "", animated: Bool = true, type: CircularSpinnerType = .determinate, showDismissButton: Any? = nil, fontSize: CGFloat, delegate: CircularSpinnerDelegate? = nil) {
         let spinner = CircularSpinner.sharedInstance
         spinner.type = type
         spinner.delegate = delegate
         spinner.titleLabel.text = title
+        
+        // Update fontSize
+        if #available(iOS 8.2, *) {
+            spinner.titleLabel.font = UIFont.systemFont(ofSize: fontSize, weight: .light)
+        } else {
+            // Fallback on earlier versions
+        }
+        
         spinner.showDismissButton = (showDismissButton as? Bool) ?? CircularSpinner.dismissButton
         spinner.value = 0
         spinner.updateFrame()
